@@ -1,0 +1,21 @@
+# -----------------------------------------------------------------
+# Backend (application layer) dependencies.
+#
+# Database: SQLite via Python's built-in "sqlite3" module - no
+# extra package needed.
+#
+# The AI layer (agents/, router/, rag/) has its own dependencies -
+# install those too with:
+#   pip install -r rag/requirements.txt
+# -----------------------------------------------------------------
+
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+python-dotenv==1.0.1
+pydantic[email]==2.9.2
+
+# Auth
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
+python-jose[cryptography]==3.3.0
+python-multipart==0.0.12

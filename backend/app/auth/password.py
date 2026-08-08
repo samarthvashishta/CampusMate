@@ -1,0 +1,23 @@
+# -----------------------------------------------------------------
+# password.py
+#
+# Small helper functions for hashing and checking passwords.
+# We NEVER store a student's real password in the database - only
+# a "hash" of it (a scrambled, one-way version). bcrypt is a well
+# known, safe hashing algorithm made exactly for passwords.
+# -----------------------------------------------------------------
+
+from passlib.context import CryptContext
+
+# CryptContext handles the hashing algorithm details for us.
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+def hash_password(plain_password: str) -> str:
+    """Turns a plain text password into a bcrypt hash for storage."""
+    return pwd_context.hash(plain_password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Checks a plain text password against a stored bcrypt hash."""
+    return pwd_context.verify(plain_password, hashed_password)

@@ -1,0 +1,13 @@
+langchain
+langchain-community
+langchain-google-genai
+langchain-chroma
+chromadb
+pypdf
+langchain-experimental
+langchain-huggingface
+docx2txt
+python-docx
+sentence-transformers
+ddgs
+langchain-openai
