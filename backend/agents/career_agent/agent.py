@@ -2,7 +2,7 @@ from typing import TypedDict, List, Optional
 from dotenv import load_dotenv
 from langgraph.graph import StateGraph, START, END
 from langchain_google_genai import ChatGoogleGenerativeAI
-from .eligibility import ROLES, _canon
+from eligibility import ROLES, _canon
 import os, re, json
 
 load_dotenv()

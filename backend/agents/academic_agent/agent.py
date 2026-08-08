@@ -19,6 +19,7 @@ def explain_topic(query: str) -> str:
 
     Student Question:
     {query}
+    if no context available just say that you don't have details about that
 
     Explain the topic simply with Definition, Key Concepts, Examples, Summary.
     """
@@ -34,7 +35,7 @@ def pyq_search(query: str) -> str:
 
     Student Query:
     {query}
-
+    if no context available just say that you don't have details about that
     List relevant Previous Year Questions with Question, Year (if available), Topic.
     """
     return llm.invoke(prompt).content
@@ -65,6 +66,7 @@ def study_plan(query: str) -> str:
 
     Student Requirement:
     {query}
+    if no context available just say that you don't have details about that
 
     Generate a study plan with Topics, Daily schedule, Practice recommendations, Revision strategy.
     """

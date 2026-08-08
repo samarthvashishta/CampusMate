@@ -120,6 +120,7 @@ Mention support only if relevant.
 
 CONTEXT:
 {context}
+if no context available just say that you don't have details about that
 
 USER QUERY:
 {query}
