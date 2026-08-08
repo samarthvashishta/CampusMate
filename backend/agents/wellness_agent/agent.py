@@ -5,7 +5,7 @@ from langchain.tools import tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import create_agent
 
-from rag.retriever import retrieve
+from backend.rag.retriever import retrieve
 
 # =========================
 # ENV
@@ -53,8 +53,7 @@ def get_context(query: str) -> str:
 @tool
 def wellness_rag(query: str) -> str:
     """
-    Use for:
-    stress
+    Use for: stress
     anxiety
     sleep
     counselling
@@ -66,7 +65,7 @@ def wellness_rag(query: str) -> str:
     wellbeing
     """
 
-    context = get_context(query)
+    context1 = get_context(query)
 
     prompt = f"""
 You are an expert Wellness Coach.
@@ -119,7 +118,7 @@ Give habit-building suggestions.
 Mention support only if relevant.
 
 CONTEXT:
-{context}
+{context1}
 if no context available just say that you don't have details about that
 
 USER QUERY:
@@ -170,12 +169,13 @@ if __name__ == "__main__":
     )
 
     print("\n================ RESPONSE ================\n")
+    print(response)
 
-    final_msg = response["messages"][-1].content
+    # final_msg = response["messages"][-1].content
 
-    if isinstance(final_msg, str):
-        print(final_msg)
-    else:
-        print(final_msg[0]["text"])
+    # if isinstance(final_msg, str):
+    #     print(final_msg)
+    # else:
+    #     print(final_msg[0]["text"])
 
-    print("\n==========================================\n")
+    # print("\n==========================================\n")

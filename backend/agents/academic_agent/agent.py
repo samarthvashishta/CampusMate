@@ -1,6 +1,6 @@
 from langchain.tools import tool
 from langchain.agents import create_agent
-from rag.retriever import retrieve
+from backend.rag.retriever import retrieve
 from dotenv import load_dotenv
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -79,6 +79,7 @@ agent = create_agent(
     model=llm,
 )
 if __name__=="__main__":
+    query=input("Enter a question: ")
 
-    response = agent.invoke({"messages": [{"role":"user","content":"Explain python programming"}]})
+    response = agent.invoke({"messages": [{"role":"user","content":query}]})
     print(response["messages"][-1].content[0]["text"])

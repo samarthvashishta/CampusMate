@@ -2,10 +2,10 @@ from dotenv import load_dotenv
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from agents.wellness_agent.agent import agent as wellness_agent
-from agents.academic_agent.agent import agent as academic_agent
-from agents.career_agent.agent import build_agent as build_career_agent
-from agents.startup_agent.agent import build_graph
+from backend.agents.wellness_agent.agent import agent as wellness_agent
+from backend.agents.academic_agent.agent import agent as academic_agent
+from backend.agents.career_agent.agent import build_agent as build_career_agent
+from backend.agents.startup_agent.agent import build_graph
 
 load_dotenv()
 api = os.getenv("GEMINI_API_KEY")
@@ -27,6 +27,7 @@ def classify_intent(query: str) -> str:
     - career    : placement, job eligibility, company, role, interview preparation
     - academic  : study topics, syllabus, previous year questions, quiz, study plan
     - startup   : business ideas, entrepreneurship, funding, incubation, startup roadmap, business model, market research, MCA, MSME
+    if the user query keywords doesn't match the keywords mentioned in the categories only then you answer based on your knowledge but return only the intent.
     User Query:
     {query}
 
