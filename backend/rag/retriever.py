@@ -1,5 +1,5 @@
-from rag.config import TOP_K
-from rag.vectorstore import get_store
+from backend.rag.config import TOP_K
+from backend.rag.vectorstore import get_store
 
 def retrieve(topic, query, k=TOP_K):
     store = get_store(topic)

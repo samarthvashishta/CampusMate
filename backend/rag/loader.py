@@ -2,7 +2,7 @@ import os
 from langchain_community.document_loaders import (
     DirectoryLoader, PyPDFLoader, Docx2txtLoader, TextLoader
 )
-from rag.config import DATA_DIR
+from backend.rag.config import DATA_DIR
 
 def load_documents(topic):
     folder = os.path.join(DATA_DIR, topic)

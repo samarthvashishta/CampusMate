@@ -1,7 +1,7 @@
 import os
 from langchain_chroma import Chroma
-from rag.config import CHROMA_DIR
-from rag.embeddings import get_embeddings
+from backend.rag.config import CHROMA_DIR
+from backend.rag.embeddings import get_embeddings
 
 def build_store(topic, chunks):
     path = os.path.join(CHROMA_DIR, topic)

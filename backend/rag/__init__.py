@@ -1,2 +1,2 @@
-from rag.retriever import retrieve
-from rag.ingest import ingest_all
+from backend.rag.retriever import retrieve
+from backend.rag.ingest import ingest_all

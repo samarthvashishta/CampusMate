@@ -1,7 +1,7 @@
-from rag.config import TOPICS
-from rag.loader import load_documents
-from rag.chunker import split_documents
-from rag.vectorstore import build_store
+from backend.rag.config import TOPICS
+from backend.rag.loader import load_documents
+from backend.rag.chunker import split_documents
+from backend.rag.vectorstore import build_store
 
 def ingest_topic(topic):
     docs = load_documents(topic)

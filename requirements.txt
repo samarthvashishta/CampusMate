@@ -32,3 +32,5 @@ python-docx
 sentence-transformers
 ddgs
 langchain-openai
+ragas
+PYPDF2

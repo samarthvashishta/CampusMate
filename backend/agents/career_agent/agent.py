@@ -2,7 +2,7 @@ from typing import TypedDict, List, Optional
 from dotenv import load_dotenv
 from langgraph.graph import StateGraph, START, END
 from langchain_google_genai import ChatGoogleGenerativeAI
-from eligibility import ROLES, _canon
+from agents.career_agent.eligibility import ROLES, _canon
 import os, re, json
 
 load_dotenv()
@@ -190,6 +190,3 @@ if __name__ == "__main__":
 
         for field in result["missing_fields"]:
             query += f"\n{field}: {input(field + ': ')}"
-
-
-   

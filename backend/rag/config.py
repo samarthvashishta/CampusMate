@@ -5,8 +5,8 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
-DATA_DIR = "rag/data"
-CHROMA_DIR = "rag/chroma_store"
+DATA_DIR = "backend/rag/data"
+CHROMA_DIR = "backend/rag/chroma_store"
 
 TOPICS = ["syllabus", "startup", "placement", "pyqs","wellness"]
 
