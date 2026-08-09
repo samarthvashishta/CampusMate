@@ -1,10 +1,6 @@
-# -----------------------------------------------------------------
-# services/auth_service.py
-#
-# Business logic for signup/login. Routers stay thin (just handle
+# logic for signup/login. Routers stay thin (just handle
 # the HTTP request/response) and call into these functions to do
 # the actual work.
-# -----------------------------------------------------------------
 
 import json
 import sqlite3

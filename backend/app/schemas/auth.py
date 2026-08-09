@@ -1,10 +1,6 @@
-# -----------------------------------------------------------------
-# schemas/auth.py
-#
 # Pydantic schemas = shapes of the JSON that comes IN to and goes
 # OUT of our API. FastAPI uses these to validate requests
 # automatically and to generate the /docs page.
-# -----------------------------------------------------------------
 
 from pydantic import BaseModel, EmailStr, Field
 

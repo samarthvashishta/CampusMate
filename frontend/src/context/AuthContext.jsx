@@ -1,11 +1,8 @@
-// -----------------------------------------------------------------
-// AuthContext.jsx
-//
 // Holds the logged-in student's info (and JWT token) in one place,
 // so any component can read/update it with useAuth() instead of
 // passing props around everywhere. We use React's built-in Context
 // API here - no Redux needed for a project this size.
-// -----------------------------------------------------------------
+
 
 import { createContext, useContext, useState } from "react";
 import * as authService from "../services/authService";

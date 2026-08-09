@@ -1,11 +1,3 @@
-// -----------------------------------------------------------------
-// Chat.jsx
-//
-// The main ChatGPT-like page: Navbar on top, Sidebar of previous
-// conversations on the left, and the active conversation's messages
-// + input box in the middle (ChatWindow).
-// -----------------------------------------------------------------
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";

@@ -1,10 +1,9 @@
-# -----------------------------------------------------------------
 # routers/chat.py
 #
 # The main chat endpoint. See services/chat_service.py for the full
 # step-by-step flow (get profile -> get history -> ask AI -> save
 # messages -> return answer).
-# -----------------------------------------------------------------
+
 
 from fastapi import APIRouter, Depends, File, Form, UploadFile
 

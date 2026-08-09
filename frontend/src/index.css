@@ -1,9 +1,3 @@
-/* -----------------------------------------------------------------
-   index.css
-   A minimal, ChatGPT-inspired stylesheet. Kept as one plain CSS
-   file (no CSS-in-JS or Tailwind) so it's easy to read top to bottom.
------------------------------------------------------------------ */
-
 * {
   box-sizing: border-box;
 }

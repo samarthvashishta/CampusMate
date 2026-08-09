@@ -12,7 +12,7 @@ from langchain_google_genai import (
     ChatGoogleGenerativeAI
 )
 
-from rag.retriever import retrieve
+from backend.rag.retriever import retrieve
 
 from backend.agents.career_agent.eligibility import (
     evaluate_candidate
@@ -481,7 +481,7 @@ def call_existing_retriever(query):
 
         if number == 2:
             return retrieve(
-                "career",
+                "placement",
                 query
             )
 

@@ -4,6 +4,7 @@ from langchain_community.document_loaders import (
 )
 from backend.rag.config import DATA_DIR
 
+
 def load_documents(topic):
     folder = os.path.join(DATA_DIR, topic)
     docs = []

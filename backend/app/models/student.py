@@ -1,4 +1,3 @@
-# -----------------------------------------------------------------
 # models/student.py
 #
 # Everything related to the shape of a "student" row in SQLite.
@@ -7,7 +6,6 @@
 # (which are lists in our API) are stored as a JSON-encoded TEXT
 # column, e.g. '["Python", "SQL"]'. json.dumps()/json.loads() convert
 # between a Python list and that stored text.
-# -----------------------------------------------------------------
 
 import json
 

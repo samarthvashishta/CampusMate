@@ -1,11 +1,8 @@
-// -----------------------------------------------------------------
-// MessageBubble.jsx
-//
 // Renders a single chat message. Styled differently depending on
 // whether it was sent by the student ("user") or the AI ("assistant").
 // Assistant output is parsed as markdown (bold, lists, headings,
 // tables, code). User messages stay plain text.
-// -----------------------------------------------------------------
+
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";

@@ -1,8 +1,5 @@
-// -----------------------------------------------------------------
-// App.jsx
-//
 // Sets up all the page routes with React Router.
-// -----------------------------------------------------------------
+
 
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";

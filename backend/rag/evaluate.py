@@ -1,6 +1,3 @@
-# -----------------------------------------------------------------
-# evaluate.py
-#
 # Basic RAG evaluation using RAGAS.
 #
 # For a handful of sample questions (one or two per topic), we:
@@ -11,8 +8,7 @@
 #       - Answer Relevancy  : does the answer actually address the question?
 #
 # Both scores are 0.0-1.0 (higher is better). This is a basic sanity
-# check that the RAG pipeline is retrieving relevant data and the LLM
-# is using it properly - not a full test suite.
+# check that the RAG pipeline is retrieving relevant data
 #
 # Note: RAGAS talks to the LLM through an OpenAI-style client, so we
 # point it at Gemini's OpenAI-compatible endpoint instead of Google's
@@ -21,7 +17,7 @@
 # RAGAS itself recommends as the workaround.
 #
 # Run with:  python -m rag.evaluate
-# -----------------------------------------------------------------
+
 
 import sys
 import time

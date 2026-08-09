@@ -1,9 +1,3 @@
-// -----------------------------------------------------------------
-// Profile.jsx
-//
-// Shows the logged-in student's profile and lets them edit it.
-// -----------------------------------------------------------------
-
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";

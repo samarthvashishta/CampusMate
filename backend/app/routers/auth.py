@@ -1,10 +1,9 @@
-# -----------------------------------------------------------------
 # routers/auth.py
 #
 # HTTP routes for signup and login. These functions stay "thin" -
 # they just read the request, call the service layer, and return
 # the response. All the real work happens in services/auth_service.py.
-# -----------------------------------------------------------------
+
 
 from fastapi import APIRouter
 

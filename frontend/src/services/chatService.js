@@ -1,8 +1,5 @@
-// -----------------------------------------------------------------
-// chatService.js
-//
 // All API calls related to conversations and chatting with the AI.
-// -----------------------------------------------------------------
+
 
 import api from "./api";
 

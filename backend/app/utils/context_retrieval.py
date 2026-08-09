@@ -1,10 +1,4 @@
-# -----------------------------------------------------------------
-# context_retrieval.py
-#
-# Simple, beginner-friendly helper.
-#
-# Every conversation in the database already belongs to exactly one
-# student (see conversation_service.get_conversation_or_404), so the
+# Every conversation in the database already belongs to exactly on student
 # "history" list this file receives is ALWAYS that one student's own
 # conversation. That is what makes this "per user" - we never mix
 # messages from different students together.
@@ -15,7 +9,7 @@
 # That way, when the combined text is sent to the AI agents, the
 # agent can see the earlier conversation and answer things like
 # "what did I ask you before?" or "summarize our chat so far".
-# -----------------------------------------------------------------
+
 
 MAX_HISTORY_MESSAGES = 20  # keep prompts small and simple
 

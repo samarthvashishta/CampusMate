@@ -1,8 +1,5 @@
-// -----------------------------------------------------------------
-// authService.js
-//
 // All API calls related to authentication and profile management.
-// -----------------------------------------------------------------
+
 
 import api from "./api";
 

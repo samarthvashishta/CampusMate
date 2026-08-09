@@ -1,11 +1,5 @@
-# -----------------------------------------------------------------
-# ai_bridge.py
-#
-# This file is the ONLY place where the backend talks to the
+#This file is the ONLY place where the backend talks to the
 # existing multi-agent AI system (router/router.py + agents/).
-# That system is treated as a "black box" we do not modify - by
-# keeping all of the wiring to it in this one file, the rest of the
-# backend never needs to know how routing/agents work internally.
 #
 # What we import already exists in the repo:
 #   - classify_intent(query)  -> "academic" | "wellness" | "career" | "startup"
@@ -18,9 +12,7 @@
 # run_*() function directly. This gives us back BOTH the answer
 # text AND the name of the agent that produced it (needed for the
 # "agent" field on assistant messages), using the exact same
-# classification the router already performs internally - we are
-# not writing any routing logic of our own.
-# -----------------------------------------------------------------
+# classification the router already performs internally.
 
 from router.router import (
     classify_intent,

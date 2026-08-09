@@ -1,6 +1,3 @@
-# -----------------------------------------------------------------
-# services/chat_service.py
-#
 # This is the heart of the chat feature. It follows the flow:
 #   1. (authentication already done by the router's Depends())
 #   2. get the student profile
@@ -13,7 +10,6 @@
 #   8. save the AI's answer to the database
 #   9. update the conversation's "updated_at" timestamp
 #  10. return the answer to the router, which sends it to the frontend
-# -----------------------------------------------------------------
 
 import os
 import tempfile

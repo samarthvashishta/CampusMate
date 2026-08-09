@@ -1,6 +1,4 @@
-# -----------------------------------------------------------------
 # models/conversation.py
-# -----------------------------------------------------------------
 
 CREATE_CONVERSATIONS_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS conversations (

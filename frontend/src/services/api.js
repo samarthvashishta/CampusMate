@@ -1,11 +1,3 @@
-// -----------------------------------------------------------------
-// api.js
-//
-// One shared axios instance used by the whole app. Instead of every
-// file writing the backend URL and auth header by hand, they just
-// import "api" from here and call api.get(...) / api.post(...).
-// -----------------------------------------------------------------
-
 import axios from "axios";
 
 const API_BASE_URL =

@@ -1,10 +1,3 @@
-// -----------------------------------------------------------------
-// Navbar.jsx
-//
-// Top bar shown on every page after login: app name, a link to the
-// profile page, and a logout button.
-// -----------------------------------------------------------------
-
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 

@@ -7,28 +7,22 @@ from langchain.agents import create_agent
 
 from backend.rag.retriever import retrieve
 
-# =========================
-# ENV
-# =========================
+
 
 load_dotenv()
 
 api_key = os.getenv("GEMINI_API_KEY")
 
-# =========================
-# LLM
-# =========================
 
+# LLM
 llm = ChatGoogleGenerativeAI(
     model="gemini-3.1-flash-lite",
     temperature=0,
     api_key=api_key,
 )
 
-# =========================
-# RETRIEVER
-# =========================
 
+# RETRIEVER
 def get_context(query: str) -> str:
     try:
         context = retrieve("wellness", query)
@@ -46,10 +40,8 @@ def get_context(query: str) -> str:
         return f"Retriever Error: {str(e)}"
 
 
-# =========================
-# WELLNESS TOOL
-# =========================
 
+# WELLNESS TOOL
 @tool
 def wellness_rag(query: str) -> str:
     """
@@ -130,9 +122,7 @@ USER QUERY:
     return response.content
 
 
-# =========================
-# AGENT
-# =========================
+
 
 agent = create_agent(
     model=llm,
@@ -149,9 +139,6 @@ RULES:
 """
 )
 
-# =========================
-# MAIN
-# =========================
 
 if __name__ == "__main__":
 
@@ -170,12 +157,3 @@ if __name__ == "__main__":
 
     print("\n================ RESPONSE ================\n")
     print(response)
-
-    # final_msg = response["messages"][-1].content
-
-    # if isinstance(final_msg, str):
-    #     print(final_msg)
-    # else:
-    #     print(final_msg[0]["text"])
-
-    # print("\n==========================================\n")

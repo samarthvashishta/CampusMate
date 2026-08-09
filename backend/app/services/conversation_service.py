@@ -1,10 +1,6 @@
-# -----------------------------------------------------------------
-# services/conversation_service.py
-#
-# Business logic for creating conversations, listing a student's
+# logic for creating conversations, listing a student's
 # past conversations (for the sidebar), and loading one
 # conversation's full message history.
-# -----------------------------------------------------------------
 
 from datetime import datetime, timezone
 

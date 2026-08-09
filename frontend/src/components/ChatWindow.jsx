@@ -1,13 +1,3 @@
-// -----------------------------------------------------------------
-// ChatWindow.jsx
-//
-// Main chat area: the scrolling list of messages plus the text
-// input box at the bottom used to send a new message. Also has an
-// "Add File" button (like a normal chatbot) so a student can attach
-// their resume (.pdf/.docx/.txt) - the file is uploaded together with
-// the message, and the career agent reads it and checks eligibility.
-// -----------------------------------------------------------------
-
 import { useEffect, useRef, useState } from "react";
 import MessageBubble from "./MessageBubble";
 

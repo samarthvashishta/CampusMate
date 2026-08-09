@@ -1,10 +1,3 @@
-// -----------------------------------------------------------------
-// Sidebar.jsx
-//
-// Left panel of the Chat page: a "New Chat" button and the list of
-// the student's previous conversations, loaded from the backend.
-// -----------------------------------------------------------------
-
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function Sidebar({ conversations, onNewChat }) {
