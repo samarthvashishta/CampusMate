@@ -47,7 +47,7 @@ def update_profile(student: dict, data: ProfileUpdateRequest) -> dict:
                 values,
             )
 
-    with get_db() as conn:
+    with get_db() as conn: #database connection----<
         row = conn.execute(
             "SELECT * FROM students WHERE id = ?", (int(student["id"]),)
         ).fetchone()
