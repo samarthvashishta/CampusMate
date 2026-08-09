@@ -203,7 +203,7 @@ def generate_startup_recommendations(state: StartupState):
     prompt = f"""
 You are a Startup Assistant.
 
-Business Idea:
+User Query:
 {state["user_query"]}
 
 Category:
@@ -212,30 +212,137 @@ Category:
 Priority:
 {state["priority"]}
 
+Feasibility:
+{state["feasibility"]}
+
 Online Research:
 {state["search_results"]}
 
-Generate:
+==================================================
+STRICT RULES (MUST FOLLOW)
+==================================================
+
+The feasibility result has ALREADY been determined by a previous node.
+
+Feasibility Result:
+{state["feasibility"]}
+
+You MUST treat this result as FINAL.
+
+DO NOT:
+- Re-evaluate feasibility.
+- Reconsider feasibility.
+- Change feasibility.
+- Analyze feasibility again.
+- Return a different feasibility result.
+
+==================================================
+RULE 1 : FEASIBILITY QUESTIONS
+==================================================
+
+If the user is asking only about:
+- feasibility
+- feasible
+- viability
+- viable
+- practical
+- possible
+
+Return ONLY one of these exact responses:
+
+The business idea is feasible.
+
+OR
+
+The business idea is not feasible.
+
+Do not return anything else.
+
+==================================================
+RULE 2 : CATEGORY QUESTIONS
+==================================================
+
+If the user is asking only for category, classification, type, or domain of the business idea, return ONLY:
+
+The category of the business idea is: {state["category"]}
+
+Do not return roadmap, funding, feasibility, recommendation, market research, or any additional text.
+
+==================================================
+RULE 3 : CATEGORY + FEASIBILITY QUESTIONS
+==================================================
+
+If the user asks for both, return ONLY:
+
+Category: {state["category"]}
+Feasibility: {state["feasibility"]}
+
+Do not return any additional information.
+
+==================================================
+RULE 4 : FUNDING / SCHEMES / ROADMAP QUESTIONS
+==================================================
+
+If the user asks for:
+- funding
+- investment
+- government schemes
+- startup schemes
+- incubators
+- business model
+- roadmap
+- recommendations
+- market research
+- target customers
+- revenue sources
+
+Then answer ONLY that request.
+
+Use the feasibility result as already decided.
+
+Never say:
+"The idea is not feasible"
+or
+"The idea is feasible"
+
+unless the user explicitly asks for feasibility.
+
+==================================================
+RULE 5 : RECOMMENDATION REQUESTS
+==================================================
+
+Generate detailed recommendations only if the user explicitly asks for:
+
+- business plan
+- startup guidance
+- roadmap
+- recommendations
+- funding strategy
+- growth strategy
+
+Then provide:
 
 1. Feasibility Summary
-
 2. Recommended Business Model
-
 3. Target Customers
-
 4. Revenue Sources
-
 5. Market Research Suggestions
-
 6. Funding Opportunities
-
-7. Government Schemes (if relevant)
-
+7. Government Schemes
 8. Incubator Recommendations
-
 9. First 90-Day Startup Roadmap
 
-Keep response practical and simple.
+==================================================
+FINAL INSTRUCTION
+==================================================
+
+Answer ONLY what the user asks.
+
+Never include extra sections.
+
+Never change the feasibility result received from previous nodes.
+
+Never perform a new feasibility analysis.
 """
 
     response = llm.invoke(prompt)
@@ -342,237 +449,3 @@ def build_graph():
             "stop": "reject_business_idea"}
     )
     return builder.compile()
-# import os
-# from typing import TypedDict
- 
-# from dotenv import load_dotenv
-# from langchain_google_genai import ChatGoogleGenerativeAI
-# from langgraph.graph import START, END, StateGraph
- 
-# load_dotenv()
- 
-# api_key = os.getenv("GEMINI_API_KEY")
- 
-# llm = ChatGoogleGenerativeAI(
-#     model="gemini-1.5-flash",
-#     api_key=api_key,
-#     temperature=0
-# )
- 
-# # ---------------------------------------------------
-# # Startup Categories
-# # ---------------------------------------------------
- 
-# STARTUP_QUERY_DATA = {
- 
-#     "startup_query": {
-#         "keywords": [
-#             "business idea",
-#             "idea validation",
-#             "mca",
-#             "msme",
-#             "business model",
-#             "entrepreneurship"
-#         ],
-#         "priority": "medium"
-#     },
- 
-#     "startup_knowledge": {
-#         "keywords": [
-#             "funding",
-#             "scheme",
-#             "government scheme",
-#             "incubator",
-#             "incubation",
-#             "innovation"
-#         ],
-#         "priority": "high"
-#     },
- 
-#     "startup_recommendation": {
-#         "keywords": [
-#             "business plan",
-#             "roadmap",
-#             "market research",
-#             "recommendation"
-#         ],
-#         "priority": "medium"
-#     }
-# }
- 
-# # ---------------------------------------------------
-# # State
-# # ---------------------------------------------------
- 
-# class StartupState(TypedDict):
-#     user_query: str
-#     category: str
-#     priority: str
-#     recommendation: str
- 
- 
-# # ---------------------------------------------------
-# # Node 1
-# # Process startup-related queries
-# # ---------------------------------------------------
- 
-# def process_startup_queries(state: StartupState) -> dict:
- 
-#     user_query = state["user_query"].lower()
- 
-#     for category, data in STARTUP_QUERY_DATA.items():
- 
-#         for keyword in data["keywords"]:
- 
-#             if keyword in user_query:
- 
-#                 return {
-#                     "category": category
-#                 }
- 
-#     return {
-#         "category": "startup_query"
-#     }
- 
- 
-# # ---------------------------------------------------
-# # Node 2
-# # Retrieve startup knowledge
-# # ---------------------------------------------------
- 
-# def retrieve_startup_knowledge(state: StartupState) -> dict:
- 
-#     category = state["category"]
- 
-#     priority = STARTUP_QUERY_DATA[category]["priority"]
- 
-#     return {
-#         "priority": priority
-#     }
- 
- 
-# # ---------------------------------------------------
-# # Node 3
-# # Generate startup recommendations
-# # ---------------------------------------------------
- 
-# def generate_startup_recommendations(state: StartupState) -> dict:
- 
-#     user_query = state["user_query"]
-#     category = state["category"]
-#     priority = state["priority"]
- 
-#     prompt = f"""
-# You are a Startup Assistant.
- 
-# Process startup-related queries:
-# Business Idea validation,
-# Startup documents (MCA, MSME),
-# Business model guidance,
-# Entrepreneurship support.
- 
-# Retrieve startup knowledge:
-# Funding opportunities,
-# Government startup schemes,
-# Incubation programs,
-# Innovation resources.
- 
-# Generate startup recommendations:
-# Business plan suggestions,
-# Funding roadmap,
-# Incubator recommendations,
-# Market research guidance.
- 
-# User Query:
-# {user_query}
- 
-# Category:
-# {category}
- 
-# Priority:
-# {priority}
- 
-# Give a clear and simple answer.
-# Keep the response within 150 words.
-# """
- 
-#     response = llm.invoke(prompt)
- 
-#     return {
-#         "recommendation": response.content
-#     }
- 
- 
-# # ---------------------------------------------------
-# # Build Graph
-# # ---------------------------------------------------
- 
-# def build_graph():
- 
-#     builder = StateGraph(StartupState)
- 
-#     builder.add_node(
-#         "process_startup_queries",
-#         process_startup_queries
-#     )
- 
-#     builder.add_node(
-#         "retrieve_startup_knowledge",
-#         retrieve_startup_knowledge
-#     )
- 
-#     builder.add_node(
-#         "generate_startup_recommendations",
-#         generate_startup_recommendations
-#     )
- 
-#     builder.add_edge(
-#         START,
-#         "process_startup_queries"
-#     )
- 
-#     builder.add_edge(
-#         "process_startup_queries",
-#         "retrieve_startup_knowledge"
-#     )
- 
-#     builder.add_edge(
-#         "retrieve_startup_knowledge",
-#         "generate_startup_recommendations"
-#     )
- 
-#     builder.add_edge(
-#         "generate_startup_recommendations",
-#         END
-#     )
- 
-#     return builder.compile()
- 
- 
-# # ---------------------------------------------------
-# # Main Function
-# # ---------------------------------------------------
- 
-# def main():
- 
-#     user_query = input("Enter your query: ")
- 
-#     state = {
-#         "user_query": user_query,
-#         "category": "",
-#         "priority": "",
-#         "recommendation": ""
-#     }
- 
-#     graph = build_graph()
- 
-#     result = graph.invoke(state)
- 
-#     print("\nCategory :", result["category"])
-#     print("Priority :", result["priority"])
-#     print("\nRecommendation :", result["recommendation"])
- 
- 
-# if __name__ == "__main__":
-#     main()
-    
