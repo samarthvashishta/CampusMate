@@ -1,117 +1,275 @@
-# agents/career_agent/eligibility.py
+# backend/agents/career_agent/eligibility.py
 
 import re
+from typing import List, Dict, Optional
 
-# 1. Each role has skills with a weight (importance points)
-ROLES = {
-    "Data Scientist": {
-        "Python": 25, "Machine Learning": 25, "Statistics": 20,
-        "SQL": 12, "Pandas": 10, "Data Visualization": 8,
-    },
-    "Data Engineer": {
-        "Python": 20, "SQL": 20, "ETL": 18,
-        "Data Warehousing": 15, "Spark": 15, "Cloud": 12,
-    },
-    "Data Analyst": {
-        "SQL": 25, "Excel": 20, "Power BI": 20,
-        "Statistics": 20, "Data Visualization": 15,
-    },
-    "ML Engineer": {
-        "Python": 22, "Machine Learning": 20, "Deep Learning": 18,
-        "MLOps": 15, "Docker": 13, "API Development": 12,
-    },
-    "Software Engineer": {
-        "Data Structures": 20, "Algorithms": 20, "OOP": 18,
-        "SQL": 15, "Git": 12, "REST APIs": 15,
-    },
-}
-
-THRESHOLD = 80   # need 80% to be eligible
-
-# map common abbreviations -> canonical skill name (lowercase)
-SYNONYMS = {
-    "ml": "machine learning",
-    "dl": "deep learning",
-    "sklearn": "scikit-learn",
-    "aws": "cloud", "gcp": "cloud", "azure": "cloud",
-    "js": "javascript",
-    "data viz": "data visualization",
-    "powerbi": "power bi",
-    "dsa": "data structures",
-    "basic dsa": "data structures",
-    "oops": "oop",
-    "stats": "statistics",
-    "ms excel": "excel",
-}
-REQUIRED_FIELDS = {
-    "tenth_percentage": "your 10th grade percentage",
-    "twelfth_percentage": "your 12th grade percentage",
-    "degree": "your degree (e.g. B.Tech)",
-    "branch": "your branch/specialization",
-    "cgpa": "your current CGPA",
-    "skills": "your key skills",
-}
-
-def find_missing_fields(profile: dict):
-    missing = {}
-    for field, question_text in REQUIRED_FIELDS.items():
-        value = profile.get(field)
-        if value is None or value == "" or value == []:
-            missing[field] = question_text
-    return missing
-
-def _canon(skill: str) -> str:
-    """Normalize a skill and map known abbreviations to the full name."""
-    s = skill.strip().lower()
-    return SYNONYMS.get(s, s)
+from langchain_huggingface import HuggingFaceEmbeddings
+import numpy as np
 
 
-def _extract_cgpa_cutoff(context: str):
-    """Find a required CGPA like '7.0', '6.5 CGPA' in RAG text."""
-    if not context:
-        return None
-    matches = re.findall(r"(\d(?:\.\d+)?)\s*(?:\+|cgpa|gpa)?", context.lower())
-    cgpas = [float(m) for m in matches if 0 < float(m) <= 10]
-    return max(cgpas) if cgpas else None
+# ============================================================
+# EMBEDDINGS
+# ============================================================
+
+embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+)
 
 
-def score_eligibility(role, user_skills):
-    role = role.strip().title()          # "data analyst" -> "Data Analyst"
+# ============================================================
+# NORMALIZATION
+# ============================================================
 
-    # allow "Microsoft Data Analyst" -> "Data Analyst"
-    for known in ROLES:
-        if known.lower() in role.lower():
-            role = known
-            break
+def normalize_skill(skill: str) -> str:
+    """
+    Normalize a skill for easier comparison.
+    """
 
-    if role not in ROLES:
-        return {"error": f"Unknown role: {role}",
-                "score": 0, "eligible": False, "suggestions": []}
+    if not skill:
+        return ""
 
-    weights = ROLES[role]                # skills + weights for this role
-    total = sum(weights.values())        # total points for this role
+    skill = skill.lower().strip()
 
-    user = {_canon(s) for s in user_skills}   # canonicalize user skills
+    replacements = {
+        "ml": "machine learning",
+        "dl": "deep learning",
+        "m.l.": "machine learning",
+        "d.l.": "deep learning",
+        "powerbi": "power bi",
+        "power-bi": "power bi",
+        "data viz": "data visualization",
+        "stats": "statistics",
+        "sklearn": "scikit learn",
+        "scikit-learn": "scikit learn",
+        "ms excel": "excel",
+        "excel spreadsheet": "excel",
+        "aws": "cloud",
+        "azure": "cloud",
+        "gcp": "cloud",
+    }
 
-    earned = 0
+    return replacements.get(skill, skill)
+
+
+# ============================================================
+# SEMANTIC SIMILARITY
+# ============================================================
+
+def semantic_similarity(skill1: str, skill2: str) -> float:
+
+    v1 = embeddings.embed_query(skill1)
+    v2 = embeddings.embed_query(skill2)
+
+    denominator = (
+        np.linalg.norm(v1) *
+        np.linalg.norm(v2)
+    )
+
+    if denominator == 0:
+        return 0.0
+
+    return float(
+        np.dot(v1, v2) / denominator
+    )
+
+
+# ============================================================
+# SEMANTIC SKILL MATCH
+# ============================================================
+
+def skills_match(
+    student_skill: str,
+    required_skill: str,
+    threshold: float = 0.72
+) -> bool:
+
+    student = normalize_skill(student_skill)
+    required = normalize_skill(required_skill)
+
+    if not student or not required:
+        return False
+
+    # Exact match first
+    if student == required:
+        return True
+
+    # Simple substring match
+    if student in required or required in student:
+        return True
+
+    # Semantic match
+    similarity = semantic_similarity(
+        student,
+        required
+    )
+
+    return similarity >= threshold
+
+
+# ============================================================
+# MATCH ALL SKILLS
+# ============================================================
+
+def evaluate_skills(
+    student_skills: List[str],
+    required_skills: List[str]
+) -> Dict:
+
+    matched = []
     missing = []
 
-    # 2. go through each required skill
-    for skill, weight in weights.items():
-        if _canon(skill) in user:
-            earned += weight             # user has it -> add points
+    for required in required_skills:
+
+        found = False
+
+        for student in student_skills:
+
+            if skills_match(
+                student,
+                required
+            ):
+                found = True
+                break
+
+        if found:
+            matched.append(required)
         else:
-            missing.append(skill)        # user is missing it
-
-    # 3. calculate percentage
-    score = round(earned / total * 100, 1)
-
-    # 4. decide eligible or not
-    eligible = score >= THRESHOLD
+            missing.append(required)
 
     return {
-        "role": role,
-        "score": score,
+        "matched_skills": matched,
+        "missing_skills": missing
+    }
+
+
+# ============================================================
+# ACADEMIC EVALUATION
+# ============================================================
+
+def evaluate_academics(
+    cgpa: Optional[float],
+    tenth: Optional[float],
+    twelfth: Optional[float],
+    requirements: Dict
+) -> Dict:
+
+    failures = []
+
+    minimum_cgpa = requirements.get(
+        "minimum_cgpa"
+    )
+
+    minimum_tenth = requirements.get(
+        "minimum_10th"
+    )
+
+    minimum_twelfth = requirements.get(
+        "minimum_12th"
+    )
+
+    # ------------------------------------------
+    # CGPA
+    # ------------------------------------------
+
+    if (
+        minimum_cgpa is not None
+        and cgpa is not None
+        and cgpa < float(minimum_cgpa)
+    ):
+        failures.append(
+            f"CGPA must be at least {minimum_cgpa}"
+        )
+
+    # ------------------------------------------
+    # 10th
+    # ------------------------------------------
+
+    if (
+        minimum_tenth is not None
+        and tenth is not None
+        and tenth < float(minimum_tenth)
+    ):
+        failures.append(
+            f"10th percentage must be at least "
+            f"{minimum_tenth}%"
+        )
+
+    # ------------------------------------------
+    # 12th
+    # ------------------------------------------
+
+    if (
+        minimum_twelfth is not None
+        and twelfth is not None
+        and twelfth < float(minimum_twelfth)
+    ):
+        failures.append(
+            f"12th percentage must be at least "
+            f"{minimum_twelfth}%"
+        )
+
+    return {
+        "academic_eligible":
+            len(failures) == 0,
+
+        "academic_failures":
+            failures
+    }
+
+
+# ============================================================
+# FINAL EVALUATION
+# ============================================================
+
+def evaluate_candidate(
+    student_skills: List[str],
+    required_skills: List[str],
+    cgpa: Optional[float],
+    tenth: Optional[float],
+    twelfth: Optional[float],
+    academic_requirements: Dict
+) -> Dict:
+
+    skill_result = evaluate_skills(
+        student_skills,
+        required_skills
+    )
+
+    academic_result = evaluate_academics(
+        cgpa,
+        tenth,
+        twelfth,
+        academic_requirements
+    )
+
+    # --------------------------------------------------------
+    # Eligibility
+    #
+    # No score.
+    #
+    # Student is eligible only when:
+    # 1. Academic requirements are satisfied
+    # 2. No required skills are missing
+    # --------------------------------------------------------
+
+    eligible = (
+        academic_result["academic_eligible"]
+        and
+        len(skill_result["missing_skills"]) == 0
+    )
+
+    return {
         "eligible": eligible,
-        "suggestions": missing,          # key name matches agent.py
+
+        "matched_skills":
+            skill_result["matched_skills"],
+
+        "missing_skills":
+            skill_result["missing_skills"],
+
+        "academic_eligible":
+            academic_result["academic_eligible"],
+
+        "academic_failures":
+            academic_result["academic_failures"]
     }
